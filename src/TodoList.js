@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import axios from 'axios';
 import TodoItem from './TodoItem';
 
 class TodoList extends Component{
@@ -14,13 +15,9 @@ class TodoList extends Component{
 		this.handleItemDelete = this.handleItemDelete.bind(this);
 	}
 	
-	/*组件即将被挂载到页面的时刻自动执行*/
-	UNSAFE_componentWillMount(){
-		console.log('componentWillMount');
-	}
 	
 	render(){
-		console.log('render');
+		console.log('parent render');
 		return(
 		<Fragment>
 			<div>
@@ -31,41 +28,22 @@ class TodoList extends Component{
 			className = 'input' 
 			value = {this.state.inputValue} 
 			onChange={this.handleInputChange}
-			ref = {(input) => {this.input = input}}
 			/>
 			<button onClick={this.handleBtnClick}>提交</button></div>
-			<ul ref = {(ul) => {this.ul = ul}}>{this.getTodoItem()}
+			<ul >{this.getTodoItem()}
 			</ul>
 		</Fragment>
 		)
 	}
 	
-
-	/*组件被挂载了之后自动执行*/
 	componentDidMount(){
-		console.log('componentDidMount');
-	}
-	
-	//组件被更新之前会自动执行
-	shouldComponentUpdate(){
-		console.log('shouldComponentUpdate');
-		return true;
-	}
-	
-	//组件被更新之前，它会自动执行,但是他在shouldComponentUpdate之后执行
-	//如果shouldComponentUpdate 返回true 他才执行
-	//如果返回false，则不执行
-	UNSAFE_componentWillUpdate(){
-		console.log("componentWillUpdate");
-	}
-	
-	//组件更新完成后执行
-	componentDidUpdate(){
-		console.log('componentDidUpdate');
-	}
-	
-	UNSAFE_componentWillReceiveProps(){
-		console.log('componentWillReceiveProps');
+		axios.get('/api/todoList')
+		.then((res) => {
+			this.setState(() => ({
+				list: [...res.data]
+				}));
+		})
+		.catch(() => {(alert('error'))})
 	}
 	
 	getTodoItem(){
@@ -81,9 +59,9 @@ class TodoList extends Component{
 		})
 	}
 	
-	handleInputChange(){
+	handleInputChange(e){
 		//console.log(this)
-		const value = this.input.value;
+		const value = e.target.value;
 		this.setState(() =>({
 			inputValue: value
 		}))
@@ -96,9 +74,7 @@ class TodoList extends Component{
 		this.setState((prevState) =>({
 			list: [...prevState.list, prevState.inputValue],
 			inputValue: ''
-		}),() => {
-			console.log(this.ul.querySelectorAll('div').length);
-		})
+		}))
 		
 		//console.log(this.ul.querySelectorAll('div').length);
 		// this.setState({
