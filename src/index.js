@@ -1,5 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TodoList from './TodoList';
+import AppGroup from './AppGroup';
 
-ReactDOM.render(<TodoList />, document.getElementById('root'));
+ReactDOM.render(<AppGroup />, document.getElementById('root'));
